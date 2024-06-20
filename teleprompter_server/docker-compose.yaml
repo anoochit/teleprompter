@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:14.1
+    ports:
+      - '8090:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: teleprompter
+      POSTGRES_PASSWORD: "FaNpvakOGhqVtwnTYCMfmbT8Fd94wYPs"
+    volumes:
+      - teleprompter_data:/var/lib/postgresql/data
+  redis:
+    image: redis:6.2.6
+    ports:
+      - '8091:6379'
+    command: redis-server --requirepass "WSX9HQTGKbtG0lHqpLI02hBNBd37dQCi"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+volumes:
+  teleprompter_data:
