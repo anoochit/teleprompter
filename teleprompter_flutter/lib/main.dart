@@ -6,10 +6,11 @@ import 'package:teleprompter_flutter/serverpod.dart';
 import 'app/routes/app_pages.dart';
 
 void main() {
+  // init widgets
   WidgetsFlutterBinding.ensureInitialized();
-
+  // init serverpod client
   initializeServerpodClient();
-
+  // run app
   runApp(
     GetMaterialApp(
       title: "Application",
