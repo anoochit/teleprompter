@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../controllers/present_controller.dart';
 
@@ -126,7 +125,7 @@ class PresentView extends GetView<PresentController> {
 
                                 controller.autoScroll();
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.play_arrow_outlined,
                                 size: 48.0,
                               ),
@@ -138,7 +137,7 @@ class PresentView extends GetView<PresentController> {
                                 controller.isFlip.value =
                                     !controller.isFlip.value;
                               },
-                              icon: Icon(Icons.flip),
+                              icon: const Icon(Icons.flip),
                             )
                           ],
                         ),
