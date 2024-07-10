@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
-import 'package:teleprompter/app/data/services/prompter_service.dart';
+import '../../../data/services/prompter_service.dart';
 import '../controllers/add_text_controller.dart';
 
 class AddTextView extends GetView<AddTextController> {
@@ -14,77 +14,80 @@ class AddTextView extends GetView<AddTextController> {
         title: const Text('Add'),
         centerTitle: true,
       ),
-      body: Form(
-        key: controller.formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: controller.titleTextController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+      body: SingleChildScrollView(
+        child: Form(
+          key: controller.formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: controller.titleTextController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    hintText: 'Title',
                   ),
-                  hintText: 'Title',
-                ),
-                validator: (value) {
-                  if (value!.trim().isEmpty) {
-                    return 'Please enter title';
-                  }
+                  validator: (value) {
+                    if (value!.trim().isEmpty) {
+                      return 'Please enter title';
+                    }
 
-                  return null;
-                },
-              ),
-              const Gap(8.0),
-              TextFormField(
-                controller: controller.contentTextController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                    return null;
+                  },
+                ),
+                const Gap(8.0),
+                TextFormField(
+                  controller: controller.contentTextController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    hintText: 'Content',
                   ),
-                  hintText: 'Content',
-                ),
-                maxLines: null,
-                validator: (value) {
-                  if (value!.trim().isEmpty) {
-                    return 'Please enter content';
-                  }
+                  maxLines: 10,
+                  validator: (value) {
+                    if (value!.trim().isEmpty) {
+                      return 'Please enter content';
+                    }
 
-                  return null;
-                },
-              ),
-              const Gap(4.0),
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                child: FilledButton(
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+                    return null;
+                  },
+                ),
+                const Gap(4.0),
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  child: FilledButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
                     ),
+                    onPressed: () async {
+                      if (controller.formKey.currentState!.validate()) {
+                        final title =
+                            controller.titleTextController.text.trim();
+                        final content =
+                            controller.contentTextController.text.trim();
+
+                        // add content
+                        await PrompterService().addContent(
+                          title: title,
+                          content: content,
+                        );
+
+                        Get.back();
+                      }
+                    },
+                    child: const Text('Save'),
                   ),
-                  onPressed: () async {
-                    if (controller.formKey.currentState!.validate()) {
-                      final title = controller.titleTextController.text.trim();
-                      final content =
-                          controller.contentTextController.text.trim();
-
-                      // add content
-                      await PrompterService().addContent(
-                        title: title,
-                        content: content,
-                      );
-
-                      Get.back();
-                    }
-                  },
-                  child: const Text('Save'),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

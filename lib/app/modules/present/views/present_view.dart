@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 import '../controllers/present_controller.dart';
 
@@ -25,13 +26,27 @@ class PresentView extends GetView<PresentController> {
                 // scroll text
                 Obx(
                   () => SingleChildScrollView(
+                    controller: controller.scrollController,
+                    reverse: (controller.isFlip.value),
                     child: Container(
                       padding: EdgeInsets.only(
-                          top: MediaQuery.sizeOf(context).height * 0.45),
+                        top: (controller.isFlip.value)
+                            ? 0.0
+                            : (MediaQuery.sizeOf(context).height * 0.45),
+                        bottom: (controller.isFlip.value)
+                            ? (MediaQuery.sizeOf(context).height * 0.45)
+                            : 0.0,
+                      ),
                       child: ListTile(
-                        title: Text(
-                          controller.content.value,
-                          style: TextStyle(fontSize: controller.fontSize.value),
+                        title: Transform.flip(
+                          flipX: (controller.isFlip.value) ? false : false,
+                          flipY: (controller.isFlip.value) ? true : false,
+                          child: Text(
+                            controller.content.value,
+                            style:
+                                TextStyle(fontSize: controller.fontSize.value),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ),
@@ -43,24 +58,22 @@ class PresentView extends GetView<PresentController> {
                   () => Positioned(
                     right: 0.0,
                     bottom: (MediaQuery.sizeOf(context).height * 0.20),
-                    width: 48,
-                    height: MediaQuery.sizeOf(context).height * 0.40,
-                    child: SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.40,
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 300),
-                        opacity: controller.isShow.value ? 1.0 : 0.0,
-                        child: RotatedBox(
-                          quarterTurns: 3,
-                          child: Slider(
-                            min: 24.0,
-                            max: 100.0,
-                            onChanged: (value) {
-                              // update font value
-                              controller.fontSize.value = value;
-                            },
-                            value: controller.fontSize.value,
-                          ),
+                    width: 64.0,
+                    height: MediaQuery.sizeOf(context).height * 0.50,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 300),
+                      opacity: controller.isShow.value ? 1.0 : 0.0,
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: Slider(
+                          min: 24.0,
+                          max: 100.0,
+                          divisions: 20,
+                          onChanged: (value) {
+                            // update font value
+                            controller.fontSize.value = value;
+                          },
+                          value: controller.fontSize.value,
                         ),
                       ),
                     ),
@@ -72,15 +85,16 @@ class PresentView extends GetView<PresentController> {
                     left: 0.0,
                     bottom: (MediaQuery.sizeOf(context).height * 0.20),
                     width: 64.0,
-                    height: MediaQuery.sizeOf(context).height * 0.40,
+                    height: MediaQuery.sizeOf(context).height * 0.50,
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds: 300),
                       opacity: controller.isShow.value ? 1.0 : 0.0,
                       child: RotatedBox(
                         quarterTurns: 3,
                         child: Slider(
-                          min: 100.0,
-                          max: 500.0,
+                          min: 1.0,
+                          max: 120.0,
+                          divisions: 20,
                           onChanged: (value) {
                             // update speed value
                             controller.scrollSpeed.value = value;
@@ -100,14 +114,33 @@ class PresentView extends GetView<PresentController> {
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: IconButton.filled(
-                          onPressed: () {
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                             // play
-                          },
-                          icon: const Icon(
-                            Icons.play_arrow,
-                            size: 48.0,
-                          ),
+                            IconButton.filled(
+                              onPressed: () {
+                                // play
+                                controller.isShow.value =
+                                    !controller.isShow.value;
+
+                                controller.autoScroll();
+                              },
+                              icon: Icon(
+                                Icons.play_arrow_outlined,
+                                size: 48.0,
+                              ),
+                            ),
+                            // flip
+                            IconButton.filledTonal(
+                              onPressed: () {
+                                // flip
+                                controller.isFlip.value =
+                                    !controller.isFlip.value;
+                              },
+                              icon: Icon(Icons.flip),
+                            )
+                          ],
                         ),
                       ),
                     ),
