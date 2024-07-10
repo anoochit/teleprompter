@@ -1,23 +1,26 @@
 import 'package:get/get.dart';
+import 'package:teleprompter/app/data/models/prompter_text.dart';
+import 'package:teleprompter/app/data/services/prompter_service.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  RxList<PrompterText> listContents = <PrompterText>[].obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    getAllContent();
+    openStream();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  openStream() {
+    final stream = PrompterService().getStreamContent();
+    stream.listen((data) {
+      listContents.value = data;
+    });
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  Future<void> getAllContent() async {
+    final contents = await PrompterService().getContents();
+    listContents.value = contents;
   }
-
-  void increment() => count.value++;
 }

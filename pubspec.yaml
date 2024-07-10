@@ -9,6 +9,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
+  gap: ^3.0.1
   get: 4.6.6
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1

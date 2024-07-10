@@ -5,12 +5,15 @@ import '../../isar.dart';
 
 class PrompterService {
   // add content
-  Future<int> addContent(
-      {required String title, required String content}) async {
+  addContent({required String title, required String content}) async {
     final row = PrompterText()
       ..title = title
       ..content = content;
-    return await isar.prompterTexts.put(row);
+    isar.writeTxn(() async {
+      return await isar.prompterTexts.put(row);
+    }).catchError((e) async {
+      throw ('$e');
+    });
   }
 
   // get all contents
@@ -21,5 +24,16 @@ class PrompterService {
   // get content by id
   Future<PrompterText?> getContent({required int id}) async {
     return await isar.prompterTexts.get(id);
+  }
+
+  // delete
+  deleteContent({required int id}) async {
+    isar.writeTxn(() async {
+      await isar.prompterTexts.delete(id);
+    });
+  }
+
+  Stream<List<PrompterText>> getStreamContent() {
+    return isar.prompterTexts.where().watch();
   }
 }
