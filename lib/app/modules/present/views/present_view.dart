@@ -14,7 +14,7 @@ class PresentView extends GetView<PresentController> {
       body: GestureDetector(
         onTap: () {
           log('tap');
-          controller.isShow.value = !controller.isShow.value;
+          controller.toggleTool();
         },
         child: SafeArea(
           child: SizedBox(
@@ -70,7 +70,7 @@ class PresentView extends GetView<PresentController> {
                           divisions: 20,
                           onChanged: (value) {
                             // update font value
-                            controller.fontSize.value = value;
+                            controller.setFontSize(size: value);
                           },
                           value: controller.fontSize.value,
                         ),
@@ -96,7 +96,7 @@ class PresentView extends GetView<PresentController> {
                           divisions: 20,
                           onChanged: (value) {
                             // update speed value
-                            controller.scrollSpeed.value = value;
+                            controller.setSpeed(speed: value);
                           },
                           value: controller.scrollSpeed.value,
                         ),
@@ -120,10 +120,7 @@ class PresentView extends GetView<PresentController> {
                             IconButton.filled(
                               onPressed: () {
                                 // play
-                                controller.isShow.value =
-                                    !controller.isShow.value;
-
-                                controller.autoScroll();
+                                controller.play();
                               },
                               icon: const Icon(
                                 Icons.play_arrow_outlined,
@@ -134,8 +131,7 @@ class PresentView extends GetView<PresentController> {
                             IconButton.filledTonal(
                               onPressed: () {
                                 // flip
-                                controller.isFlip.value =
-                                    !controller.isFlip.value;
+                                controller.flip();
                               },
                               icon: const Icon(Icons.flip),
                             )
